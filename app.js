@@ -1,5 +1,5 @@
 // ضع هنا رابط مجلد نموذج Teachable Machine (مثال: "https://<username>.github.io/repo/tm-model/")
-const MODEL_URL = "https://zidiz08-dot.github.io/smartguide/"; // لو رفعت النموذج في نفس المجلد (اختبار محلي)
+const MODEL_URL = "./"; // لو رفعت النموذج في نفس المجلد (اختبار محلي)
 const audioFiles = {
   "door": "audio/door.mp3",
   "chair": "audio/chair.mp3",
@@ -72,4 +72,5 @@ init().catch(e => {
   console.error(e);
   document.getElementById("status").innerText = "حدث خطأ أثناء تحميل النموذج. تأكد من مسار MODEL_URL.";
 });
+
 
