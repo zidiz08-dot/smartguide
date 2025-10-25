@@ -5,25 +5,70 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>SmartGuide AI - المرشد الذكي</title>
   <style>
-    body { font-family: "Segoe UI", Tahoma, Arial; direction: rtl; text-align: center; padding: 20px; background:#f6f8fa; }
-    #video { width: 90%; max-width: 640px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-    #status { margin-top: 12px; font-size: 1.2rem; }
-    button { margin-top: 12px; padding:10px 16px; font-size:1rem; }
+    body {
+      font-family: "Segoe UI", Tahoma, Arial;
+      direction: rtl;
+      text-align: center;
+      padding: 20px;
+      background: #f6f8fa;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+      color: #222;
+    }
+
+    video {
+      width: 90%;
+      max-width: 640px;
+      border-radius: 12px;
+      background: #000;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      display: block;
+      margin: 0 auto;
+    }
+
+    #status {
+      margin-top: 16px;
+      font-size: 1.1rem;
+      color: #333;
+    }
+
+    button {
+      margin-top: 16px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      background: #1976d2;
+      color: #fff;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #125a9c;
+    }
   </style>
 </head>
 <body>
   <h1>SmartGuide AI — المرشد الذكي</h1>
-<video id="video" autoplay muted playsinline width="640" height="480"
-  style="display:block;margin:auto;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.15);"></video>
 
-  <div id="status">الحالة: غير متصل</div>
+  <!-- ✅ الكاميرا -->
+  <video id="video" autoplay playsinline muted></video>
+
+  <!-- ✅ حالة النظام -->
+  <div id="status">جاري التحميل...</div>
+
+  <!-- ✅ زر التشغيل -->
   <button id="startBtn">ابدأ التعرف</button>
+
+  <!-- ✅ مكاتب الذكاء الاصطناعي -->
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.9.0/dist/tf.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
+
+  <!-- ✅ الكود الرئيسي -->
   <script src="app.js"></script>
 </body>
 </html>
-
-
-
-
