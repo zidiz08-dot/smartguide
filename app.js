@@ -16,7 +16,6 @@ const audioFiles = {
 
 let model, video, running = true, lastLabel = "", welcomePlayed = false;
 
-// ✅ تشغيل الكاميرا بعد الضغط (حتى يُسمح بالصوت)
 async function init() {
   const modelURL = MODEL_URL + "model.json";
   const metadataURL = MODEL_URL + "metadata.json";
@@ -38,14 +37,20 @@ async function startCameraAndAudio() {
     video.srcObject = stream;
     await video.play();
 
-    // ✅ تشغيل صوت الترحيب بعد السماح
+    // ✅ تشغيل صوت الترحيب أولاً فقط
     if (!welcomePlayed) {
+      document.getElementById("status").innerText = "مرحباً بك في SmartGuide AI...";
       const welcome = new Audio("welcome.mp3");
       await welcome.play();
       welcomePlayed = true;
     }
 
-    document.getElementById("status").innerText = "التعرف جارٍ...";
+    // ⏳ انتظر 3 ثوانٍ قبل البدء بالتعرف
+    setTimeout(() => {
+      document.getElementById("status").innerText = "التعرف جارٍ...";
+      running = true;
+    }, 3000);
+
   } catch (err) {
     alert("⚠️ لم يتم السماح بالوصول إلى الكاميرا أو الصوت.");
     console.error(err);
@@ -67,7 +72,7 @@ async function predict() {
   const label = top.className;
   const prob = top.probability;
 
-  // ✅ فقط يتحدث إذا كانت الثقة عالية، ويسكت إذا لم يتأكد
+  // ✅ يتحدث فقط عند الثقة العالية، ويسكت إن لم يتأكد
   if (prob > 0.75 && label !== lastLabel) {
     lastLabel = label;
     document.getElementById("status").innerText =
@@ -76,7 +81,6 @@ async function predict() {
     colorFeedback(label);
     flashEffect();
   } else if (prob < 0.6) {
-    // لا يفعل شيئًا، يظل صامتًا
     document.getElementById("status").innerText = "جارٍ البحث...";
   }
 }
@@ -101,7 +105,7 @@ function colorFeedback(label) {
   else document.body.style.background = "#f6f8fa";
 }
 
-// ✅ وميض عند التعرف
+// ✅ وميض بصري عند التعرف
 function flashEffect() {
   document.body.animate([{ opacity: 0.8 }, { opacity: 1 }], { duration: 250 });
 }
@@ -113,7 +117,7 @@ document.getElementById("startBtn").addEventListener("click", async () => {
   if (running) await startCameraAndAudio();
 });
 
-// ✅ الساعة
+// ✅ الساعة والتاريخ
 setInterval(() => {
   const now = new Date();
   document.getElementById("clock").innerText =
