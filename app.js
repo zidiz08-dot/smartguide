@@ -14,44 +14,50 @@ const audioFiles = {
   "unknown": "door.mp3"
 };
 
-let model, video, running = true, lastLabel = "";
+let model, video, running = true, lastLabel = "", welcomePlayed = false;
 
-// ✅ صوت ترحيبي عند تشغيل الصفحة
-window.addEventListener("load", () => {
-  const welcome = new Audio("welcome.mp3");
-  welcome.play();
-});
-
+// ✅ تشغيل الكاميرا بعد الضغط (حتى يُسمح بالصوت)
 async function init() {
   const modelURL = MODEL_URL + "model.json";
   const metadataURL = MODEL_URL + "metadata.json";
   model = await tmImage.load(modelURL, metadataURL);
 
   document.getElementById("status").innerText =
-    "جاهز. اضغط 'ابدأ التعرف' لبدء.";
+    "اضغط 'ابدأ التعرف' لتشغيل الكاميرا والنظام.";
 
   video = document.getElementById("video");
+
+  requestAnimationFrame(loop);
+}
+
+async function startCameraAndAudio() {
   try {
     const stream = await navigator.mediaDevices.getUserMedia({
       video: { facingMode: "environment" }
     });
     video.srcObject = stream;
     await video.play();
+
+    // ✅ تشغيل صوت الترحيب بعد السماح
+    if (!welcomePlayed) {
+      const welcome = new Audio("welcome.mp3");
+      await welcome.play();
+      welcomePlayed = true;
+    }
+
+    document.getElementById("status").innerText = "التعرف جارٍ...";
   } catch (err) {
-    alert("⚠️ لم يتم السماح بالوصول إلى الكاميرا.");
+    alert("⚠️ لم يتم السماح بالوصول إلى الكاميرا أو الصوت.");
     console.error(err);
   }
-
-  requestAnimationFrame(loop);
 }
 
 async function loop() {
-  if (running) await predict();
+  if (running && model && video.readyState === 4) await predict();
   requestAnimationFrame(loop);
 }
 
 async function predict() {
-  if (!model || !video) return;
   const prediction = await model.predict(video);
   let top = prediction[0];
   for (let i = 1; i < prediction.length; i++) {
@@ -61,6 +67,7 @@ async function predict() {
   const label = top.className;
   const prob = top.probability;
 
+  // ✅ فقط يتحدث إذا كانت الثقة عالية، ويسكت إذا لم يتأكد
   if (prob > 0.75 && label !== lastLabel) {
     lastLabel = label;
     document.getElementById("status").innerText =
@@ -69,8 +76,8 @@ async function predict() {
     colorFeedback(label);
     flashEffect();
   } else if (prob < 0.6) {
-    const unsure = new Audio("unknown.mp3");
-    unsure.play();
+    // لا يفعل شيئًا، يظل صامتًا
+    document.getElementById("status").innerText = "جارٍ البحث...";
   }
 }
 
@@ -85,7 +92,7 @@ function playAudioFor(label) {
   }
 }
 
-// ✅ ألوان مختلفة حسب العنصر
+// ✅ تغيير الألوان حسب العنصر
 function colorFeedback(label) {
   if (label === "door") document.body.style.background = "#ffcccc";
   else if (label === "stair") document.body.style.background = "#fff2cc";
@@ -94,21 +101,19 @@ function colorFeedback(label) {
   else document.body.style.background = "#f6f8fa";
 }
 
-// ✅ تأثير وميض بصري عند التعرف
+// ✅ وميض عند التعرف
 function flashEffect() {
   document.body.animate([{ opacity: 0.8 }, { opacity: 1 }], { duration: 250 });
 }
 
 // ✅ زر التشغيل/الإيقاف
-document.getElementById("startBtn").addEventListener("click", () => {
+document.getElementById("startBtn").addEventListener("click", async () => {
   running = !running;
   document.getElementById("startBtn").innerText = running ? "إيقاف" : "ابدأ التعرف";
-  document.getElementById("status").innerText = running
-    ? "التعرف جارٍ..."
-    : "تم الإيقاف.";
+  if (running) await startCameraAndAudio();
 });
 
-// ✅ الساعة والتاريخ
+// ✅ الساعة
 setInterval(() => {
   const now = new Date();
   document.getElementById("clock").innerText =
