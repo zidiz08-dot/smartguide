@@ -14,9 +14,11 @@ const audioFiles = {
   "unknown": "door.mp3"
 };
 
-let model, video, running = true, lastLabel = "";
+let model, video, running = true;
+let lastLabel = "", confirmedLabel = "", stableCount = 0;
+let firstPredictionDone = false;
+let soundEnabled = true; // 🔊 مفعّل افتراضيًا
 
-// ✅ تشغيل الكاميرا والموديل تلقائياً عند الفتح
 async function init() {
   const modelURL = MODEL_URL + "model.json";
   const metadataURL = MODEL_URL + "metadata.json";
@@ -56,31 +58,38 @@ async function predict() {
   const label = top.className;
   const prob = top.probability;
 
-  // ✅ يتحدث فقط عند الثقة العالية، ويسكت إن لم يتأكد
-  if (prob > 0.75 && label !== lastLabel) {
-    lastLabel = label;
-    document.getElementById("status").innerText =
-      `تم التعرف: ${label} (${(prob * 100).toFixed(0)}%)`;
-    playAudioFor(label);
-    colorFeedback(label);
-    flashEffect();
-  } else if (prob < 0.6) {
+  if (prob > 0.88) {
+    if (label === lastLabel) {
+      stableCount++;
+      if (stableCount >= 2 && label !== confirmedLabel) {
+        confirmedLabel = label;
+        firstPredictionDone = true;
+        document.getElementById("status").innerText =
+          `تم التعرف: ${label} (${(prob * 100).toFixed(0)}%)`;
+        playAudioFor(label);
+        colorFeedback(label);
+        flashEffect();
+      }
+    } else {
+      stableCount = 0;
+      lastLabel = label;
+    }
+  } else if (prob < 0.6 && firstPredictionDone) {
     document.getElementById("status").innerText = "جارٍ البحث...";
   }
 }
 
 function playAudioFor(label) {
+  if (!soundEnabled) return; // 🔇 في حال تم كتم الصوت
   const file = audioFiles[label] || audioFiles["unknown"];
   const audio = new Audio(file);
   audio.play();
 
-  // ✅ اهتزاز عند العناصر الخطرة
   if (label === "door" || label === "stair") {
     if (navigator.vibrate) navigator.vibrate(400);
   }
 }
 
-// ✅ ألوان حسب العنصر
 function colorFeedback(label) {
   if (label === "door") document.body.style.background = "#ffcccc";
   else if (label === "stair") document.body.style.background = "#fff2cc";
@@ -89,12 +98,19 @@ function colorFeedback(label) {
   else document.body.style.background = "#f6f8fa";
 }
 
-// ✅ وميض بصري عند التعرف
 function flashEffect() {
   document.body.animate([{ opacity: 0.8 }, { opacity: 1 }], { duration: 250 });
 }
 
-// ✅ الساعة والتاريخ
+// 🔊 زر التحكم في الصوت
+document.getElementById("soundToggle").addEventListener("click", () => {
+  soundEnabled = !soundEnabled;
+  const btn = document.getElementById("soundToggle");
+  btn.textContent = soundEnabled ? "🔊" : "🔇";
+  btn.title = soundEnabled ? "الصوت مفعّل" : "الصوت مغلق";
+});
+
+// 🕒 الساعة
 setInterval(() => {
   const now = new Date();
   document.getElementById("clock").innerText =
