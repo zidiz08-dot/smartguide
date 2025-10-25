@@ -21,6 +21,7 @@
       border-radius: 10px;
       margin-bottom: 20px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+      position: relative;
     }
 
     h1 {
@@ -66,14 +67,34 @@
       width: 120px;
       margin-bottom: 10px;
     }
+
+    /* 🔊 زر الصوت */
+    #soundToggle {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: white;
+      color: #1976d2;
+      border: none;
+      border-radius: 50%;
+      width: 42px;
+      height: 42px;
+      font-size: 20px;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      transition: 0.3s;
+    }
+    #soundToggle:hover {
+      background: #e3f2fd;
+    }
   </style>
 </head>
 <body>
   <header>
-    <!-- ✅ شعار الوزارة المرفوع من GitHub -->
     <img src="moe-logo.png" class="logo" alt="شعار وزارة التربية والتعليم الإماراتية" />
     <h1>SmartGuide AI — المرشد الذكي لأصحاب الهمم</h1>
     <h2>Al Jarf Boys School — تحت إشراف وزارة التربية والتعليم 🇦🇪</h2>
+    <button id="soundToggle" title="تشغيل/إيقاف الصوت">🔊</button>
   </header>
 
   <div id="clock"></div>
