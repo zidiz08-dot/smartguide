@@ -14,47 +14,31 @@ const audioFiles = {
   "unknown": "door.mp3"
 };
 
-let model, video, running = true, lastLabel = "", welcomePlayed = false;
+let model, video, running = true, lastLabel = "";
 
+// ✅ تشغيل الكاميرا والموديل تلقائياً عند الفتح
 async function init() {
   const modelURL = MODEL_URL + "model.json";
   const metadataURL = MODEL_URL + "metadata.json";
   model = await tmImage.load(modelURL, metadataURL);
 
-  document.getElementById("status").innerText =
-    "اضغط 'ابدأ التعرف' لتشغيل الكاميرا والنظام.";
+  document.getElementById("status").innerText = "يتم تهيئة الكاميرا...";
 
   video = document.getElementById("video");
 
-  requestAnimationFrame(loop);
-}
-
-async function startCameraAndAudio() {
   try {
     const stream = await navigator.mediaDevices.getUserMedia({
       video: { facingMode: "environment" }
     });
     video.srcObject = stream;
     await video.play();
-
-    // ✅ تشغيل صوت الترحيب أولاً فقط
-    if (!welcomePlayed) {
-      document.getElementById("status").innerText = "مرحباً بك في SmartGuide AI...";
-      const welcome = new Audio("welcome.mp3");
-      await welcome.play();
-      welcomePlayed = true;
-    }
-
-    // ⏳ انتظر 3 ثوانٍ قبل البدء بالتعرف
-    setTimeout(() => {
-      document.getElementById("status").innerText = "التعرف جارٍ...";
-      running = true;
-    }, 3000);
-
+    document.getElementById("status").innerText = "التعرف جارٍ...";
   } catch (err) {
-    alert("⚠️ لم يتم السماح بالوصول إلى الكاميرا أو الصوت.");
+    alert("⚠️ لم يتم السماح بالوصول إلى الكاميرا.");
     console.error(err);
   }
+
+  requestAnimationFrame(loop);
 }
 
 async function loop() {
@@ -90,13 +74,13 @@ function playAudioFor(label) {
   const audio = new Audio(file);
   audio.play();
 
-  // ✅ اهتزاز لأصحاب الهمم عند الخطر
+  // ✅ اهتزاز عند العناصر الخطرة
   if (label === "door" || label === "stair") {
     if (navigator.vibrate) navigator.vibrate(400);
   }
 }
 
-// ✅ تغيير الألوان حسب العنصر
+// ✅ ألوان حسب العنصر
 function colorFeedback(label) {
   if (label === "door") document.body.style.background = "#ffcccc";
   else if (label === "stair") document.body.style.background = "#fff2cc";
@@ -109,13 +93,6 @@ function colorFeedback(label) {
 function flashEffect() {
   document.body.animate([{ opacity: 0.8 }, { opacity: 1 }], { duration: 250 });
 }
-
-// ✅ زر التشغيل/الإيقاف
-document.getElementById("startBtn").addEventListener("click", async () => {
-  running = !running;
-  document.getElementById("startBtn").innerText = running ? "إيقاف" : "ابدأ التعرف";
-  if (running) await startCameraAndAudio();
-});
 
 // ✅ الساعة والتاريخ
 setInterval(() => {
