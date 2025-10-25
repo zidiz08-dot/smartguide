@@ -15,12 +15,12 @@
     }
 
     header {
-      background: #1976d2;
+      background: linear-gradient(90deg, #1976d2, #004ba0);
       color: white;
-      padding: 10px;
-      border-radius: 8px;
+      padding: 12px;
+      border-radius: 10px;
       margin-bottom: 20px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
     }
 
     h1 {
@@ -39,7 +39,7 @@
       max-width: 640px;
       border-radius: 12px;
       background: #000;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
       display: block;
       margin: 0 auto;
     }
@@ -66,25 +66,39 @@
       background: #125a9c;
     }
 
+    #clock {
+      margin: 10px 0;
+      color: #444;
+      font-size: 1rem;
+    }
+
     footer {
       margin-top: 25px;
       color: #777;
       font-size: 0.9rem;
     }
+
+    img.logo {
+      width: 90px;
+      margin-bottom: 10px;
+    }
   </style>
 </head>
 <body>
   <header>
-    <h1>SmartGuide AI — المرشد الذكي</h1>
-    <h2>Al Jarf Boys School - دعم أصحاب الهمم</h2>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3e/Emblem_of_UAE.svg" class="logo" alt="وزارة التربية والتعليم" />
+    <h1>SmartGuide AI — المرشد الذكي لأصحاب الهمم</h1>
+    <h2>Al Jarf Boys School — تحت إشراف وزارة التربية والتعليم 🇦🇪</h2>
   </header>
 
+  <div id="clock"></div>
   <video id="video" autoplay playsinline muted></video>
   <div id="status">جارٍ تحميل النظام...</div>
   <button id="startBtn">ابدأ التعرف</button>
 
   <footer>
-    بإشراف: قسم الحوسبة والابتكار - Al Jarf Boys School 💡
+    بإشراف: قسم الحوسبة والابتكار — Al Jarf Boys School 💡  
+    <br>جميع الحقوق محفوظة © 2025
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.9.0/dist/tf.min.js"></script>
