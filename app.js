@@ -1,8 +1,16 @@
 const MODEL_URL = "./";
 const audioFiles = {
   "door": "door.mp3",
+  "Door": "door.mp3",
   "chair": "chair.mp3",
+  "Chair": "chair.mp3",
+  "table": "table.mp3",
+  "Table": "table.mp3",
   "stair": "stair.mp3",
+  "Stair": "stair.mp3",
+  "stairs": "stair.mp3",
+  "Stairs": "stair.mp3",
+  "unknown": "door.mp3"
 };
 
 let model, video, running = false;
@@ -74,3 +82,4 @@ init().catch(e => {
   document.getElementById("status").innerText =
     "❌ حدث خطأ أثناء تحميل النموذج.";
 });
+
