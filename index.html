@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>SmartGuide AI - المرشد الذكي</title>
+  <title>SmartGuide AI - Al Jarf Boys School</title>
   <style>
     body {
       font-family: "Segoe UI", Tahoma, Arial;
@@ -11,12 +11,27 @@
       text-align: center;
       padding: 20px;
       background: #f6f8fa;
+      transition: background 0.4s ease;
+    }
+
+    header {
+      background: #1976d2;
+      color: white;
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     }
 
     h1 {
+      margin: 0;
       font-size: 1.8rem;
-      margin-bottom: 20px;
-      color: #222;
+    }
+
+    h2 {
+      margin: 5px 0 0;
+      font-weight: normal;
+      font-size: 1.1rem;
     }
 
     video {
@@ -50,25 +65,30 @@
     button:hover {
       background: #125a9c;
     }
+
+    footer {
+      margin-top: 25px;
+      color: #777;
+      font-size: 0.9rem;
+    }
   </style>
 </head>
 <body>
-  <h1>SmartGuide AI — المرشد الذكي</h1>
+  <header>
+    <h1>SmartGuide AI — المرشد الذكي</h1>
+    <h2>Al Jarf Boys School - دعم أصحاب الهمم</h2>
+  </header>
 
-  <!-- ✅ الكاميرا -->
   <video id="video" autoplay playsinline muted></video>
-
-  <!-- ✅ حالة النظام -->
   <div id="status">جارٍ تحميل النظام...</div>
-
-  <!-- ✅ زر التشغيل -->
   <button id="startBtn">ابدأ التعرف</button>
 
-  <!-- ✅ مكتبات الذكاء الاصطناعي -->
+  <footer>
+    بإشراف: قسم الحوسبة والابتكار - Al Jarf Boys School 💡
+  </footer>
+
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.9.0/dist/tf.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
-
-  <!-- ✅ الكود الرئيسي -->
   <script src="app.js"></script>
 </body>
 </html>
