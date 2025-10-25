@@ -20,8 +20,12 @@ async function init() {
   await webcam.setup();
   await webcam.play();
   window.requestAnimationFrame(loop);
-  document.getElementById("video").srcObject = webcam.webcam.video;
+
+  // ✅ هذا هو السطر المعدّل الذي يجعل الفيديو يظهر فعلياً
+  document.getElementById("video").srcObject = webcam.stream;
+
   document.getElementById("status").innerText = "جاهز. اضغط 'ابدأ التعرف' لبدء.";
+
 }
 
 async function loop() {
@@ -66,6 +70,7 @@ init().catch(e => {
   console.error(e);
   document.getElementById("status").innerText = "حدث خطأ أثناء تحميل النموذج. تأكد من المسار.";
 });
+
 
 
 
