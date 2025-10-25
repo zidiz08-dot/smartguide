@@ -3,10 +3,9 @@ const audioFiles = {
   "door": "door.mp3",
   "chair": "chair.mp3",
   "table": "table.mp3",
-  "stairs": "stair.mp3",
-  "unknown": "door.mp3" // مؤقتًا لتفادي الخطأ لو الملف مفقود
+  "stair": "stair.mp3", // ← تأكد الاسم مطابق لما يظهر في النص
+  "unknown": "door.mp3"
 };
-
 let model, webcam, maxPredictions;
 
 async function init() {
@@ -70,6 +69,7 @@ init().catch(e => {
   console.error(e);
   document.getElementById("status").innerText = "حدث خطأ أثناء تحميل النموذج. تأكد من المسار.";
 });
+
 
 
 
