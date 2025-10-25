@@ -14,8 +14,13 @@ const audioFiles = {
   "unknown": "door.mp3"
 };
 
-let model, video, running = true;
-let lastLabel = "";
+let model, video, running = true, lastLabel = "";
+
+// ✅ صوت ترحيبي عند تشغيل الصفحة
+window.addEventListener("load", () => {
+  const welcome = new Audio("welcome.mp3");
+  welcome.play();
+});
 
 async function init() {
   const modelURL = MODEL_URL + "model.json";
@@ -62,6 +67,10 @@ async function predict() {
       `تم التعرف: ${label} (${(prob * 100).toFixed(0)}%)`;
     playAudioFor(label);
     colorFeedback(label);
+    flashEffect();
+  } else if (prob < 0.6) {
+    const unsure = new Audio("unknown.mp3");
+    unsure.play();
   }
 }
 
@@ -76,13 +85,18 @@ function playAudioFor(label) {
   }
 }
 
-// ✅ تغيير لون الخلفية حسب النوع
+// ✅ ألوان مختلفة حسب العنصر
 function colorFeedback(label) {
   if (label === "door") document.body.style.background = "#ffcccc";
   else if (label === "stair") document.body.style.background = "#fff2cc";
   else if (label === "chair") document.body.style.background = "#ccffcc";
   else if (label === "table") document.body.style.background = "#cce5ff";
   else document.body.style.background = "#f6f8fa";
+}
+
+// ✅ تأثير وميض بصري عند التعرف
+function flashEffect() {
+  document.body.animate([{ opacity: 0.8 }, { opacity: 1 }], { duration: 250 });
 }
 
 // ✅ زر التشغيل/الإيقاف
@@ -93,6 +107,15 @@ document.getElementById("startBtn").addEventListener("click", () => {
     ? "التعرف جارٍ..."
     : "تم الإيقاف.";
 });
+
+// ✅ الساعة والتاريخ
+setInterval(() => {
+  const now = new Date();
+  document.getElementById("clock").innerText =
+    now.toLocaleTimeString("ar-AE", { hour: "2-digit", minute: "2-digit" }) +
+    " — " +
+    now.toLocaleDateString("ar-AE");
+}, 1000);
 
 init().catch(e => {
   console.error(e);
